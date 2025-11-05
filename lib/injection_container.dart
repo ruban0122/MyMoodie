@@ -20,6 +20,15 @@ import 'features/mood/domain/usecases/get_moods.dart';
 import 'features/mood/domain/usecases/delete_mood.dart';
 import 'features/mood/presentation/bloc/mood_bloc.dart';
 
+// JOURNAL
+import 'features/journal/data/data_sources/journal_firebase_datasource.dart';
+import 'features/journal/data/repositories/journal_repository_impl.dart';
+import 'features/journal/domain/repositories/journal_repository.dart';
+import 'features/journal/domain/usecases/add_journal.dart';
+import 'features/journal/domain/usecases/get_journals.dart';
+import 'features/journal/domain/usecases/delete_journal.dart';
+import 'features/journal/presentation/bloc/journal_bloc.dart';
+
 final sl = GetIt.instance;
 
 Future<void> init() async {
@@ -57,4 +66,17 @@ Future<void> init() async {
         getMoods: sl(),
         deleteMood: sl(),
       ));
+
+  // ============================
+  // JOURNAL FEATURE
+  // ============================
+  sl.registerLazySingleton<JournalFirebaseDataSource>(
+      () => JournalFirebaseDataSource(sl()));
+  sl.registerLazySingleton<JournalRepository>(
+      () => JournalRepositoryImpl(sl()));
+  sl.registerLazySingleton(() => AddJournal(sl()));
+  sl.registerLazySingleton(() => GetJournals(sl()));
+  sl.registerLazySingleton(() => DeleteJournal(sl()));
+
+  sl.registerFactory(() => JournalBloc(sl()));
 }

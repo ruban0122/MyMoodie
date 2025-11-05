@@ -4,7 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mymoodie/features/auth/presentation/pages/login_page.dart';
 import 'package:mymoodie/features/auth/presentation/pages/register_page.dart';
+import 'package:mymoodie/features/journal/presentation/bloc/journal_bloc.dart';
+import 'package:mymoodie/features/journal/presentation/pages/add_journal_page.dart';
+import 'package:mymoodie/features/journal/presentation/pages/journal_main_page.dart';
 import 'package:mymoodie/features/mood/presentation/bloc/mood_bloc.dart';
+import 'package:mymoodie/features/mood/presentation/pages/main_home_screen.dart';
 import 'package:mymoodie/features/mood/presentation/pages/mood_main_screen.dart';
 import 'core/constants/app_colors.dart';
 import 'core/constants/app_text_styles.dart';
@@ -35,6 +39,9 @@ class MyMoodieApp extends StatelessWidget {
         ),
         BlocProvider<MoodBloc>(
           create: (_) => di.sl<MoodBloc>(), // 👈 add this line
+        ),
+        BlocProvider<JournalBloc>(
+          create: (_) => di.sl<JournalBloc>(), // ✅ Added Journal Bloc
         ),
       ],
       child: MaterialApp(
@@ -67,12 +74,31 @@ class MyMoodieApp extends StatelessWidget {
         routes: {
           '/login': (_) => const LoginPage(),
           '/register': (_) => const RegisterPage(),
+          '/main_home': (context) => const MainHomeScreen(),
+
           '/mood-main': (_) {
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
-              return MoodMainScreen(userId: user.uid);
+              return const MoodMainScreen();
             } else {
               return const LoginPage(); // Fallback if no user
+            }
+          },
+        // ✅ Journal routes
+          '/journal-main': (_) {
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              return JournalMainPage(userId: user.uid);
+            } else {
+              return const LoginPage();
+            }
+          },
+          '/add-journal': (_) {
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              return AddJournalPage(userId: user.uid);
+            } else {
+              return const LoginPage();
             }
           },
         },

@@ -297,7 +297,7 @@ class _LoginPageState extends State<LoginPage> {
                   BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state is AuthSuccess) {
-                        Navigator.pushReplacementNamed(context, '/mood-main');
+                        Navigator.pushReplacementNamed(context, '/main_home');
                       } else if (state is AuthFailure) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
